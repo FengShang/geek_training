@@ -1,0 +1,88 @@
+
+<cppncss>
+  <measure type="Function">
+    <labels>
+      <label>Nr.</label>
+      <label>NCSS</label>
+      <label>CCN</label>
+    </labels>
+    <item name="demo::geek::want_to_play( std::string&amp; ) at ./src/geek.cpp:51">
+      <value>1</value>
+      <value>14</value>
+      <value>5</value>
+    </item>
+    <item name="demo::geek::guess_answer( const std::vector&lt; int &gt;&amp; ) at ./src/geek.cpp:147">
+      <value>2</value>
+      <value>13</value>
+      <value>5</value>
+    </item>
+    <item name="demo::geek::is_valid( const std::string&amp;, std::vector&lt; int &gt;&amp; ) at ./src/geek.cpp:78">
+      <value>3</value>
+      <value>12</value>
+      <value>5</value>
+    </item>
+    <item name="geek_game() at ./src/geek.cpp:179">
+      <value>4</value>
+      <value>12</value>
+      <value>3</value>
+    </item>
+    <item name="demo::geek::prepair_answer( std::vector&lt; int &gt;&amp; ) at ./src/geek.cpp:38">
+      <value>5</value>
+      <value>9</value>
+      <value>2</value>
+    </item>
+    <item name="demo::geek::cows_count( const std::vector&lt; int &gt;, const std::vector&lt; int &gt; ) at ./src/geek.cpp:127">
+      <value>6</value>
+      <value>9</value>
+      <value>4</value>
+    </item>
+    <item name="demo::geek::check_answer( const string&amp; ) at ./src/geek.cpp:18">
+      <value>7</value>
+      <value>7</value>
+      <value>9</value>
+    </item>
+    <item name="demo::geek::has_duplication( const std::vector&lt; int &gt; ) at ./src/geek.cpp:101">
+      <value>8</value>
+      <value>7</value>
+      <value>3</value>
+    </item>
+    <item name="demo::geek::bulls_count( const std::vector&lt; int &gt;, const std::vector&lt; int &gt; ) at ./src/geek.cpp:115">
+      <value>9</value>
+      <value>6</value>
+      <value>3</value>
+    </item>
+    <item name="main( int, char*[] ) at ./src/main.cc:2">
+      <value>10</value>
+      <value>3</value>
+      <value>1</value>
+    </item>
+    <average label="NCSS" value="9.2"/>
+    <average label="CCN" value="4.0"/>
+  </measure>
+  <measure type="File">
+    <labels>
+      <label>Nr.</label>
+      <label>NCSS</label>
+      <label>CCN</label>
+      <label>Functions</label>
+    </labels>
+    <item name="./src/geek.cpp">
+      <value>1</value>
+      <value>93</value>
+      <value>39</value>
+      <value>9</value>
+    </item>
+    <item name="./src/main.cc">
+      <value>2</value>
+      <value>3</value>
+      <value>1</value>
+      <value>1</value>
+    </item>
+    <average label="NCSS" value="48.0"/>
+    <average label="CCN" value="20.0"/>
+    <average label="Functions" value="5.0"/>
+    <sum label="NCSS" value="96"/>
+    <sum label="CCN" value="40"/>
+    <sum label="Functions" value="10"/>
+  </measure>
+</cppncss>
