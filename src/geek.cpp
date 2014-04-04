@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
+#include <sstream>
 #include "../include/geek.h"
 
 using namespace std;
@@ -13,7 +14,106 @@ namespace demo
 namespace geek
 {
 
-const int ANSWER_SIZE(4);
+void BullCowGame::prepair_answer()
+{
+    int valid_numbers [9] = {1,2,3,4,5,6,7,8,9};
+    for(int i = 0; i < ANSWER_SIZE; i++){
+        int j = rand()%9;
+        int temp = valid_numbers[i];
+        valid_numbers[i] = valid_numbers[j];
+        valid_numbers[j] = temp;
+    }
+    _answer.resize(ANSWER_SIZE);
+    std::copy(&valid_numbers[0], &valid_numbers[0] + ANSWER_SIZE, _answer.begin());
+}
+
+
+bool BullCowGame::is_valid(const std::string& input)
+{
+    if (input.length() != 4)
+    {
+        cout << "Guess must be 4 digits." << endl;
+        return false;
+    }
+
+    _guess.resize(ANSWER_SIZE);
+    for (int i = 0; i < ANSWER_SIZE; i++)
+    {
+        int current_digit = input[i] - '0';
+        if (current_digit > 9 || current_digit < 1)
+        {
+            cout << "Digit must be a 4-digit number within 1 to 9." << endl;
+            return false;
+        }
+        _guess[i] = current_digit;
+    }
+
+    return !has_duplication();
+}
+
+bool BullCowGame::has_duplication()
+{
+    std::vector<int> map(10,0);
+    for (size_t i = 0; i < _guess.size(); ++i)
+    {
+        if (map[_guess[i]] == 1)
+        {
+            return true;
+        }
+        map[_guess[i]] = 1;
+    }
+    cout << "Digit must be a 4-digit number without duplication." << endl;
+    return false;
+}
+
+int BullCowGame::bulls_count()
+{
+    int bulls(0);
+    for (int i = 0; i < ANSWER_SIZE; i++)
+    {
+        if(_guess[i] == _answer[i])
+            bulls++;
+    }
+    return bulls;
+}
+
+bool BullCowGame::guess_right()
+{
+    bool success = (bulls_count() == ANSWER_SIZE);
+    if (success)
+    {
+        cout << "Congratulations! You have won!" << endl;
+    }
+    return bulls_count() == ANSWER_SIZE;
+}
+
+string BullCowGame::get_status()
+{
+    stringstream out;
+    out << bulls_count() << " bulls, " << cows_count() << " cows.";
+    return out.str();
+}
+
+int BullCowGame::cows_count()
+{
+    std::vector<int> map(10,0);
+    for (size_t i = 0; i < _answer.size(); ++i)
+    {
+        map[_answer[i]] = 1;
+    }
+
+    int cows(0);
+    for (size_t i = 0; i < _guess.size(); i++)
+    {
+        if(map[_guess[i]] == 1)
+        {
+            cows++;
+        }
+    }
+    return cows;
+}
+
+
 
 answer_t check_answer(const string& input)
 {
@@ -35,18 +135,6 @@ answer_t check_answer(const string& input)
     return demo::geek::UNKNOW;
 }
 
-void prepair_answer(std::vector<int>& output)
-{
-    int valid_numbers [9] = {1,2,3,4,5,6,7,8,9};
-    for(int i = 0; i < ANSWER_SIZE; i++){
-        int j = rand()%9;
-        int temp = valid_numbers[i];
-        valid_numbers[i] = valid_numbers[j];
-        valid_numbers[j] = temp;
-    }
-    output.resize(ANSWER_SIZE);
-    std::copy(&valid_numbers[0], &valid_numbers[0] + ANSWER_SIZE, output.begin());
-}
 
 bool want_to_play(std::string& message)
 {
@@ -75,98 +163,23 @@ bool want_to_play(std::string& message)
     }
 }
 
-bool is_valid(const std::string& input, std::vector<int>& output)
+
+void play_the_game(BullCowGame& game)
 {
-    if (input.length() != 4)
-    {
-        cout << "Guess must be 4 digits." << endl;
-        return false;
-    }
+    game.prepair_answer();
 
-    output.resize(ANSWER_SIZE);
-    for (int i = 0; i < ANSWER_SIZE; i++)
-    {
-        int current_digit = input[i] - '0';
-        if (current_digit > 9 || current_digit < 1)
-        {
-            cout << "Digit must be a 4-digit number within 1 to 9." << endl;
-            return false;
-        }
-        output[i] = current_digit;
-    }
-
-    return true;
-}
-
-bool has_duplication(const std::vector<int> input)
-{
-    std::vector<int> map(10,0);
-    for (size_t i = 0; i < input.size(); ++i)
-    {
-        if (map[input[i]] == 1)
-        {
-            return true;
-        }
-        map[input[i]] = 1;
-    }
-    return false;
-}
-
-int bulls_count(const std::vector<int> guess_number,
-        const std::vector<int> answer)
-{
-    int bulls(0);
-    for (int i = 0; i < ANSWER_SIZE; i++)
-    {
-        if(guess_number[i] == answer[i])
-            bulls++;
-    }
-    return bulls;
-}
-
-int cows_count(const std::vector<int> guess_number,
-        const std::vector<int> answer)
-{
-    std::vector<int> map(10,0);
-    for (size_t i = 0; i < answer.size(); ++i)
-    {
-        map[answer[i]] = 1;
-    }
-
-    int cows(0);
-    for (size_t i = 0; i < guess_number.size(); i++)
-    {
-        if(map[guess_number[i]] == 1)
-        {
-            cows++;
-        }
-    }
-    return cows;
-}
-
-void guess_answer(const std::vector<int>& answer)
-{
     string guess;
     while (cout << "Your guess? ", getline(cin, guess))
     {
-        std::vector<int> guess_number;
-        if (!is_valid(guess, guess_number))
+        if (!game.is_valid(guess))
         {
             continue;
         }
 
-        if (has_duplication(guess_number))
-        {
-            cout << "Digit must be a 4-digit number without duplication." << endl;
-            continue;
-        }
+        cout << game.get_status() << endl;
 
-        cout << bulls_count(guess_number, answer) << " bulls, " 
-            << cows_count(guess_number, answer) << " cows." << endl;
-
-        if (bulls_count(guess_number, answer) == ANSWER_SIZE)
+        if (game.guess_right())
         {
-            cout << "Congratulations! You have won!" << endl;
             break;
         }
     }
@@ -182,18 +195,16 @@ int geek_game()
     cout << "Welcome to bulls and cows!\nDo you want to play? ";
     while (true)
     {
-        string message;
-        if (!want_to_play(message))
+        string error_message;
+        if (!want_to_play(error_message))
         {
-            cout << message.c_str() << endl;
+            cout << error_message.c_str() << endl;
             return EXIT_SUCCESS;
         }
 
-        vector<int> answer;
-        prepair_answer(answer);
-
-        guess_answer(answer);
-
+        BullCowGame game;
+        play_the_game(game);
         cout << "Another game? ";
     }
 }
+
