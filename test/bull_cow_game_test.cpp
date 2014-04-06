@@ -1,7 +1,6 @@
-
 #include "gtest/gtest.h"
 #include <vector>
-#include "geek.h"
+#include "bull_cow_game.h"
 
 
 using namespace std;
@@ -13,11 +12,22 @@ class FakeGame : public BullCowGame
 public:
     void set_answer(vector<int>& in)
     {
-       _answer = in; 
+        _answer = in; 
+        build_lookup_table();
     }
     void set_guess(vector<int>& in)
     {
-       _guess = in; 
+        _guess = in; 
+    }
+
+    int bulls_count()
+    {
+        return _bulls_count;
+    }
+
+    int cows_count()
+    {
+        return _cows_count;
     }
 
 };
@@ -47,40 +57,6 @@ protected:
 
 using namespace demo::geek;
 
-TEST_F(Geek_Fixture, should_pass_if_input_yes)
-{
-    demo::geek::answer_t answer;
-    answer = check_answer("yes");
-	EXPECT_EQ(demo::geek::YES, answer);
-    answer = check_answer("Yes");
-	EXPECT_EQ(demo::geek::YES, answer);
-    answer = check_answer("y");
-	EXPECT_EQ(demo::geek::YES, answer);
-    answer = check_answer("Y");
-	EXPECT_EQ(demo::geek::YES, answer);
-}
-
-TEST_F(Geek_Fixture, should_fail_if_input_no)
-{
-    demo::geek::answer_t answer;
-    answer = check_answer("no");
-	EXPECT_EQ(demo::geek::NO, answer);
-    answer = check_answer("No");
-	EXPECT_EQ(demo::geek::NO, answer);
-    answer = check_answer("N");
-	EXPECT_EQ(demo::geek::NO, answer);
-    answer = check_answer("n");
-	EXPECT_EQ(demo::geek::NO, answer);
-}
-
-TEST_F(Geek_Fixture, should_be_unknow_if_input_other)
-{
-    demo::geek::answer_t answer;
-    answer = check_answer("other");
-	EXPECT_EQ(demo::geek::UNKNOW, answer);
-}
-
-
 TEST_F(Geek_Fixture, 4_digits_should_be_valid)
 {
     EXPECT_TRUE(game.is_valid("1234"));
@@ -103,7 +79,7 @@ TEST_F(Geek_Fixture, should_have_no_duplication)
 }
 
 
-TEST_F(Geek_Fixture, should_calc_correct_pos)
+TEST_F(Geek_Fixture, should_calc_bulls)
 {
     vector<int> answer(4);
     answer[0] = 1;
@@ -117,10 +93,12 @@ TEST_F(Geek_Fixture, should_calc_correct_pos)
     guess[2] = 4;
     guess[3] = 3;
     game.set_guess(guess);
+
+    EXPECT_FALSE(game.guess_right());
     EXPECT_EQ(2, game.bulls_count());
 }
 
-TEST_F(Geek_Fixture, should_calc_correct_num)
+TEST_F(Geek_Fixture, should_calc_cows)
 {
     vector<int> answer(4);
     answer[0] = 1;
@@ -134,6 +112,8 @@ TEST_F(Geek_Fixture, should_calc_correct_num)
     guess[2] = 4;
     guess[3] = 3;
     game.set_guess(guess);
-    EXPECT_EQ(4, game.cows_count());
+
+    EXPECT_FALSE(game.guess_right());
+    EXPECT_EQ(2, game.cows_count());
 }
 

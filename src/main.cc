@@ -1,6 +1,6 @@
-#include "geek.h"
+#include "game_center.h"
 int main(int argc, char *argv[])
 {
-	geek_game();
-	return 0;
+    demo::geek::GameCenter game;
+    return game.run();
 }
